@@ -1,0 +1,13 @@
+.password-toggle {
+  position: absolute;
+  top: 22%;
+  right: 250px;
+  transform: translateY(50%);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bolder;
+}
+
+.error {
+  color: red;
+}

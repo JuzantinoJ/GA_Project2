@@ -10,7 +10,9 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import { supabase } from "../../client";
 import "../sign-up/style.css";
-
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import IconButton from "@mui/material/IconButton";
 const defaultTheme = createTheme();
 
 export default function SignUp() {
@@ -129,13 +131,18 @@ export default function SignUp() {
                   autoComplete="new-password"
                   onChange={handleChange}
                   onFocus={() => setPasswordError("")}
-                ></TextField>
-                <span
-                  className="password-toggle"
-                  onClick={handleTogglePassword}
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </span>
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleTogglePassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    ),
+                  }}
+                />
               </Grid>
             </Grid>
             {passwordError && <p className="error">{passwordError}</p>}

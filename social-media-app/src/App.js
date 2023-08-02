@@ -8,6 +8,7 @@ import Dashboard from "./components/main/dashboard/Dashboard";
 import Profile from "./components/main/profile/Profile";
 import EditProfile from "./components/main/profile/EditProfile";
 import Container from "./components/container/Container";
+import { dummyNotifications } from "./components/data/data";
 
 function App() {
   const [token, setToken] = useState(false);
@@ -32,7 +33,10 @@ function App() {
         {token ? (
           <>
             <Route path="/container" element={<Container token={token} />}>
-              <Route path="notifications" element={<Notification />} />
+              <Route
+                path="notifications"
+                element={<Notification notifications={dummyNotifications} />}
+              />
               <Route path="profile" element={<Profile />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="edit-profile" element={<EditProfile />} />

@@ -27,7 +27,3 @@
   font-weight: 700;
   src: url("../node_modules/@fontsource/roboto/700.css") format("woff2");
 }
-
-* {
-  text-align: center;
-}

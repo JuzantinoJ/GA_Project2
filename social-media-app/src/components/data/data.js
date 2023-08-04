@@ -39,6 +39,6 @@ export const dummyNotifications = [
 export const dummyProfile = {
   avatar:
     "https://img.freepik.com/premium-vector/man-avatar-profile-round-icon_24640-14044.jpg?w=826", // Replace with the URL of the user's avatar image
-  name: "John Doe", // Replace with the user's name
-  bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget ultrices elit.", // Replace with the user's bio
+  name: "", // Replace with the user's name
+  bio: "My life, my choice", // Replace with the user's bio
 };

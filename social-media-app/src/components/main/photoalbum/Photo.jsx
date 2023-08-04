@@ -1,12 +1,12 @@
 import React from "react";
 import Container from "@mui/material/Container";
 
-const Dashboard = () => {
+const Photo = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 10, mb: 4 }}>
-      <h2>Dashboard</h2>
+      <h2>Photo Album</h2>
     </Container>
   );
 };
 
-export default Dashboard;
+export default Photo;

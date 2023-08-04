@@ -10,8 +10,10 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { dummyProfile } from "../../data/data";
 import Typography from "@mui/material/Typography";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import { IconButton } from "@mui/material";
 
-const Profile = () => {
+const Profile = ({ token }) => {
   const theme = useTheme();
   const isWidth840pxOrLess = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -38,10 +40,25 @@ const Profile = () => {
               src={dummyProfile.avatar}
             />
             <Typography sx={{ marginTop: 5 }} variant="h3">
-              {dummyProfile.name}
+              {token.user.user_metadata.name}
             </Typography>
-            <Typography sx={{ marginTop: 5, marginBottom: 5 }} variant="body1">
-              {dummyProfile.bio}
+            <Typography
+              sx={{ fontSize: "24px", marginTop: 5, marginBottom: 5 }}
+              variant="body1"
+            >
+              {dummyProfile.bio ? (
+                dummyProfile.bio
+              ) : (
+                <span style={{ fontStyle: "italic" }}>Create a bio</span>
+              )}
+              <IconButton
+                component={Link}
+                to="/container/edit-profile"
+                size="small"
+                sx={{ marginBottom: "10px" }}
+              >
+                <BorderColorIcon />
+              </IconButton>
             </Typography>
             <Button
               component={Link}

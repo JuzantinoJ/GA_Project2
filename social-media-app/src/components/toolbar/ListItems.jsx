@@ -21,15 +21,15 @@ export const MainListItems = () => {
   };
 
   const handleFriendsClick = () => {
-    navigate("/friends"); // Redirect to the friends page
+    navigate("/container/friends-list"); // Redirect to the friends page
   };
 
   const handleProfileClick = () => {
     navigate("/container/profile"); // Redirect to the reports page
   };
 
-  const handleIntegrationsClick = () => {
-    navigate("/integrations"); // Redirect to the integrations page
+  const handlePhotoClick = () => {
+    navigate("/container/photo-album"); // Redirect to the integrations page
   };
 
   return (
@@ -58,11 +58,11 @@ export const MainListItems = () => {
         </ListItemIcon>
         <ListItemText primary="Friends" />
       </ListItemButton>
-      <ListItemButton onClick={handleIntegrationsClick}>
+      <ListItemButton onClick={handlePhotoClick}>
         <ListItemIcon>
           <LayersIcon />
         </ListItemIcon>
-        <ListItemText primary="Integrations" />
+        <ListItemText primary="Photo" />
       </ListItemButton>
     </React.Fragment>
   );

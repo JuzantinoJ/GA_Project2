@@ -4,6 +4,8 @@ import Notification from "./notification/Notification";
 import Profile from "./profile/Profile";
 import Dashboard from "@mui/icons-material/Dashboard";
 import EditProfile from "./profile/EditProfile";
+import Photo from "./photoalbum/Photo";
+import FriendsList from "./friendlist/FriendsList";
 
 const Main = () => {
   return (
@@ -27,6 +29,8 @@ const Main = () => {
         <Route path="notifications" element={<Notification />} />
         <Route path="profile" element={<Profile />} />
         <Route path="edit-profile" element={<EditProfile />} />
+        <Route path="photo-album" element={<Photo />} />
+        <Route path="friends-list" element={<FriendsList />} />
       </Routes>
     </div>
   );

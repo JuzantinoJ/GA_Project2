@@ -7,10 +7,11 @@ import { dummyNotifications } from "../data/data";
 import { useState } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { useNavigate } from "react-router";
 
 const defaultTheme = createTheme();
 
-const Container = ({ token, handleLogout }) => {
+const Container = ({ token }) => {
   const [notifications, setNotifications] = useState(dummyNotifications);
 
   const [open, setOpen] = useState(true);
@@ -20,6 +21,12 @@ const Container = ({ token, handleLogout }) => {
   };
   const handleNotificationsUpdate = (updatedNotifications) => {
     setNotifications(updatedNotifications);
+  };
+  let navigate = useNavigate();
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("token");
+    navigate("/");
   };
 
   return (

@@ -15,8 +15,9 @@ import { Stack } from "@mui/material";
 import AvatarWithIcon from "./Avatar";
 import ImageUploadModal from "./modal/ImageUploadModal";
 import { supabase } from "../../../client";
+import useUserData from "../../customHook/useUserData";
 
-const EditProfile = ({ token }) => {
+const EditProfile = ({ token, onProfileUpdated }) => {
   const [formData, setFormData] = useState({
     avatar: dummyProfile.avatar,
     name: "",
@@ -27,36 +28,17 @@ const EditProfile = ({ token }) => {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [showFilePicker, setShowFilePicker] = useState(false);
   const navigate = useNavigate();
+  const userData = useUserData(token.user.id); // Use the custom hook to fetch user data
 
   useEffect(() => {
-    if (token) {
-      fetchUserData(token.user.id);
+    if (userData) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        name: userData.name,
+        bio: userData.bio,
+      }));
     }
-  }, [token]);
-
-  const fetchUserData = async (userId) => {
-    try {
-      let { data: users, error } = await supabase
-        .from("users")
-        .select("username, bio") // Select the username instead of "id"
-        .eq("auth_uid", userId); // Use "auth_uid" instead of "id"
-
-      if (error) {
-        throw error;
-      }
-
-      console.log(users);
-      if (users.length > 0) {
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          name: users[0].username,
-          bio: users[0].bio,
-        }));
-      }
-    } catch (error) {
-      console.error("Error fetching user data:", error.message);
-    }
-  };
+  }, [userData]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -85,6 +67,9 @@ const EditProfile = ({ token }) => {
       }
 
       console.log("Updated user data:", data);
+      if (onProfileUpdated) {
+        onProfileUpdated(dataToUpdate.username);
+      }
       setIsSuccessModalOpen(true); // Open the success modal
     } catch (error) {
       console.error("Error updating user data:", error.message);

@@ -61,3 +61,19 @@ export const friendsData = [
   },
   // Add more friends here
 ];
+
+export const dummyUserPosts = [
+  {
+    id: 1,
+    user: "John Doe",
+    content: "Having a great time coding!",
+    timestamp: "2 hours ago",
+  },
+  {
+    id: 2,
+    user: "Jane Smith",
+    content: "Exploring new places!",
+    timestamp: "1 day ago",
+  },
+  // Add more dummy posts as needed
+];

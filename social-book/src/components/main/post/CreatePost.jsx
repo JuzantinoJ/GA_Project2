@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Paper, TextField, Button, Divider } from "@mui/material";
 import { styled } from "@mui/material/styles"; // Import 'styled' from @mui/material/styles
-import Title from "../Title";
 
 const PostForm = styled("div")(({ theme }) => ({
   display: "flex",
@@ -13,7 +12,7 @@ const PostsContainer = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
 }));
 
-const Posts = ({ posts, setPosts }) => {
+const CreatePost = ({ posts, setPosts }) => {
   const [newPost, setNewPost] = useState("");
 
   const handlePostChange = (e) => {
@@ -29,7 +28,7 @@ const Posts = ({ posts, setPosts }) => {
 
   return (
     <PostsContainer>
-      <Title>Create a New Post</Title>
+      <h2>Create a New Post</h2>
       <PostForm>
         <TextField
           sx={{ flexGrow: 1, marginRight: (theme) => theme.spacing(2) }}
@@ -47,4 +46,4 @@ const Posts = ({ posts, setPosts }) => {
   );
 };
 
-export default Posts;
+export default CreatePost;

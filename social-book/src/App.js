@@ -23,6 +23,11 @@ function App() {
     }
   }, [token, saveTokenToSessionStorage]);
 
+  const handleProfileUpdated = (newUsername) => {
+    // Update the user data or perform any necessary actions here
+    console.log("Profile updated:", newUsername);
+  };
+
   console.log(token);
   return (
     <div className="container">
@@ -51,7 +56,12 @@ function App() {
               <Route path="dashboard" element={<Dashboard />} />
               <Route
                 path="edit-profile"
-                element={<EditProfile token={token} />}
+                element={
+                  <EditProfile
+                    token={token}
+                    onProfileUpdated={handleProfileUpdated}
+                  />
+                }
               />
               <Route path="photo-album" element={<Photo />} />
               <Route path="friends-list" element={<FriendsList />} />

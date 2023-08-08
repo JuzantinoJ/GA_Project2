@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -14,7 +14,7 @@ import NotificationsMenuItem from "./NotificationsMenuItem";
 import SettingsMenuItem from "./SettingsMenuItem";
 // import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../client";
+import useUserData from "../customHook/useUserData";
 
 const drawerWidth = 240;
 
@@ -43,41 +43,13 @@ const Header = ({
   toggleDrawer,
   handleLogout,
   token,
+  onProfileUpdated,
 }) => {
   const [anchorElNotifications, setAnchorElNotifications] = useState(null);
   const [anchorElSettings, setAnchorElSettings] = useState(null);
-  const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (token) {
-      fetchUserData(token.user.id);
-      console.log(token.user.id);
-    }
-  }, [token]);
-
-  const fetchUserData = async (userId) => {
-    console.log("User ID:", userId);
-    try {
-      let { data: users, error } = await supabase
-        .from("users")
-        .select("username") // Select the username instead of "id"
-        .eq("auth_uid", userId); // Use "auth_uid" instead of "id"
-
-      if (error) {
-        throw error;
-      }
-
-      console.log(users);
-      if (users.length > 0) {
-        setUserData(users[0].username); // Set the username directly from the response
-      } else {
-        setUserData(null); // If the user is not found, set username to null
-      }
-    } catch (error) {
-      console.error("Error fetching user data:", error.message);
-    }
-  };
+  const userData = useUserData(token.user.id); // Use the custom hook to fetch user data
 
   const handleNotificationsClick = (event) => {
     setAnchorElNotifications(event.currentTarget);
@@ -87,7 +59,6 @@ const Header = ({
     const updatedNotifications = dummyNotifications.filter(
       (notification) => notification.id !== notificationId
     );
-    // Update the parent state directly through a callback passed from the parent
     handleNotificationsUpdate(updatedNotifications);
     setAnchorElNotifications(null);
     navigate("/container/notifications");
@@ -106,6 +77,7 @@ const Header = ({
     navigate("/container/profile");
     handleCloseMenu();
   };
+
   return (
     <AppBar position="absolute" open={open}>
       <Toolbar>
@@ -128,7 +100,7 @@ const Header = ({
           noWrap
           sx={{ flexGrow: 1 }}
         >
-          Welcome Back {userData}
+          Welcome Back {userData ? userData.name : ""}
         </Typography>
         <IconButton color="inherit" onClick={handleNotificationsClick}>
           <Badge badgeContent={dummyNotifications.length} color="secondary">
@@ -159,7 +131,6 @@ const Header = ({
           vertical: "top",
           horizontal: "right",
         }}
-        // onClick={navigateNotificationPage}
       >
         {dummyNotifications.map((notification) => (
           <NotificationsMenuItem

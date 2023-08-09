@@ -12,6 +12,7 @@ import { dummyNotifications } from "./components/data/data";
 import Photo from "./components/main/photoalbum/Photo";
 import FriendsList from "./components/main/friendlist/FriendsList";
 import useAuth from "./components/auth/useAuth";
+import AccountPage from "./components/main/profile/AccountPage";
 
 function App() {
   const { token, saveTokenToSessionStorage, clearTokenFromSessionStorage } =
@@ -53,7 +54,7 @@ function App() {
                 element={<Notification notifications={dummyNotifications} />}
               />
               <Route path="profile" element={<Profile token={token} />} />
-              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="dashboard" element={<Dashboard token={token} />} />
               <Route
                 path="edit-profile"
                 element={
@@ -65,6 +66,7 @@ function App() {
               />
               <Route path="photo-album" element={<Photo />} />
               <Route path="friends-list" element={<FriendsList />} />
+              <Route path="account-page" element={<AccountPage />} />
             </Route>
           </>
         ) : (

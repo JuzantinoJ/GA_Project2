@@ -5,8 +5,49 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import CreatePost from "../post/CreatePost";
 import PostList from "../post/PostList";
+import { useState, useEffect, useCallback } from "react";
+import { supabase } from "../../../client";
 
-const Dashboard = () => {
+const Dashboard = ({ token }) => {
+  const [userData, setUserData] = useState({
+    avatar: "",
+    name: "",
+    bio: "",
+  });
+
+  const fetchUserData = useCallback(async (userId) => {
+    try {
+      let { data: users, error } = await supabase
+        .from("users")
+        .select("username, bio, avatar_url")
+        .eq("auth_uid", userId);
+      if (error) {
+        throw error;
+      }
+      if (users.length > 0) {
+        setUserData({
+          avatar: users[0].avatar_url,
+          name: users[0].username,
+          bio: users[0].bio,
+        });
+      } else {
+        setUserData({
+          avatar: null,
+          name: null,
+          bio: null,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error.message);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      fetchUserData(token.user.id);
+    }
+  }, [token, fetchUserData]);
+
   return (
     <Container maxWidth="lg" sx={{ mt: 10, mb: 4 }}>
       <h2>Dashboard</h2>
@@ -17,13 +58,13 @@ const Dashboard = () => {
             <Grid item>
               <Avatar
                 alt="User Avatar"
-                src="/user-avatar.jpg"
-                sx={{ width: 100, height: 100 }}
+                src={userData.avatar}
+                sx={{ width: 200, height: 200 }}
               />
             </Grid>
-            <Grid item>
-              <Typography variant="h4">John Doe</Typography>
-              <Typography variant="body3">Software Developer</Typography>
+            <Grid item sx={{ marginLeft: "40px", whiteSpace: "nowrap" }}>
+              <Typography variant="h4">{userData.name}</Typography>
+              <Typography variant="body3">{userData.bio}</Typography>
             </Grid>
           </Grid>
         </Grid>

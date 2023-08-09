@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
@@ -8,50 +8,48 @@ import { Link, Outlet } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import { dummyProfile } from "../../data/data";
 import Typography from "@mui/material/Typography";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
-import { IconButton } from "@mui/material";
 import { supabase } from "../../../client";
-import { useState, useEffect } from "react";
+import { dummyProfile } from "../../data/data";
 
 const Profile = ({ token }) => {
   const theme = useTheme();
   const isWidth840pxOrLess = useMediaQuery(theme.breakpoints.down("md"));
   const [userName, setUserName] = useState(null);
   const [userBio, setUserBio] = useState(null);
+  const [userAvatar, setUserAvatar] = useState(null);
 
-  useEffect(() => {
-    if (token) {
-      fetchUserData(token.user.id);
-      console.log(token.user.id);
-    }
-  }, [token]);
-
-  const fetchUserData = async (userId) => {
-    console.log("User ID:", userId);
+  const fetchUserData = useCallback(async (userId) => {
     try {
       let { data: users, error } = await supabase
         .from("users")
-        .select("username, bio") // Select the username instead of "id"
-        .eq("auth_uid", userId); // Use "auth_uid" instead of "id"
-
+        .select("username, bio, avatar_url")
+        .eq("auth_uid", userId);
       if (error) {
         throw error;
       }
-
-      console.log(users);
       if (users.length > 0) {
-        setUserName(users[0].username); // Set the username directly from the response
+        setUserName(users[0].username);
         setUserBio(users[0].bio);
+        setUserAvatar(String(users[0].avatar_url));
       } else {
-        setUserName(null); // If the user is not found, set username to null
+        setUserName(null);
         setUserBio(null);
+        setUserAvatar(null);
       }
     } catch (error) {
       console.error("Error fetching user data:", error.message);
     }
-  };
+  }, []);
+
+  console.log(userAvatar);
+
+  useEffect(() => {
+    if (token) {
+      fetchUserData(token.user.id);
+    }
+  }, [token, fetchUserData]);
+
   return (
     <Container maxWidth="lg" sx={{ mt: 10, mb: 4 }}>
       <Grid container spacing={3}>
@@ -71,8 +69,8 @@ const Profile = ({ token }) => {
                 width: 100,
                 height: 100,
               }}
-              alt={dummyProfile.name}
-              src={dummyProfile.avatar}
+              alt={userName || dummyProfile.name}
+              src={userAvatar || dummyProfile.avatar} // Use userAvatar if available, otherwise use dummyProfile.avatar
             />
             <Typography sx={{ marginTop: 5 }} variant="h3">
               {userName}
@@ -86,14 +84,6 @@ const Profile = ({ token }) => {
               ) : (
                 <span style={{ fontStyle: "italic" }}>Create a bio</span>
               )}
-              <IconButton
-                component={Link}
-                to="/container/edit-profile"
-                size="small"
-                sx={{ marginBottom: "10px" }}
-              >
-                <BorderColorIcon />
-              </IconButton>
             </Typography>
             <Button
               component={Link}

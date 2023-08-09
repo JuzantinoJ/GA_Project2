@@ -1,10 +1,10 @@
 import React from "react";
 import MenuItem from "@mui/material/MenuItem";
 
-const SettingsMenuItem = ({ onClick }) => (
+const SettingsMenuItem = ({ handleAccount, handleProfile }) => (
   <>
-    <MenuItem onClick={onClick}>Profile</MenuItem>
-    <MenuItem onClick={onClick}>My Account</MenuItem>
+    <MenuItem onClick={handleProfile}>Profile</MenuItem>
+    <MenuItem onClick={handleAccount}>My Account</MenuItem>
   </>
 );
 

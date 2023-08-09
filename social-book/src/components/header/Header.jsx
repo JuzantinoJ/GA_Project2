@@ -78,6 +78,11 @@ const Header = ({
     handleCloseMenu();
   };
 
+  const navigateAccountPage = () => {
+    navigate("/container/account-page");
+    handleCloseMenu();
+  };
+
   return (
     <AppBar position="absolute" open={open}>
       <Toolbar>
@@ -154,7 +159,10 @@ const Header = ({
           horizontal: "right",
         }}
       >
-        <SettingsMenuItem onClick={navigateProfilePage} />
+        <SettingsMenuItem
+          handleProfile={navigateProfilePage}
+          handleAccount={navigateAccountPage}
+        />
       </Menu>
     </AppBar>
   );

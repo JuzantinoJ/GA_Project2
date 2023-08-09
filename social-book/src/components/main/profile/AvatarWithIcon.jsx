@@ -16,20 +16,21 @@ const useStyles = styled((theme) => ({
     color: theme.palette.common.white,
     borderRadius: "50%",
     border: `2px solid ${theme.palette.common.white}`,
-    fontSize: "24px", // Adjust the fontSize to resize the icon
-    cursor: "pointer", // Add the cursor property to make it a hand cursor on hover
+    fontSize: "24px",
+    cursor: "pointer",
     "&:hover": {
-      cursor: "pointer", // Show hand cursor on hover
+      cursor: "pointer",
     },
   },
 }));
 
-const AvatarWithIcon = ({ src, alt, onUpload }) => {
+const AvatarWithIcon = ({ displayAvatar, alt, onUpload }) => {
   const classes = useStyles();
 
   const handleImageUpload = () => {
-    onUpload(); // Call the onUpload function from props
+    onUpload();
   };
+
   return (
     <div className={classes.avatarContainer}>
       <Avatar
@@ -38,7 +39,7 @@ const AvatarWithIcon = ({ src, alt, onUpload }) => {
           height: 100,
         }}
         alt={alt}
-        src={src}
+        src={displayAvatar} // Use the displayAvatar prop to show the uploaded image
       />
       <CameraAltIcon className={classes.icon} onClick={handleImageUpload} />
     </div>

@@ -1,61 +1,43 @@
-import React, { useRef } from "react";
-import { styled } from "@mui/material/styles";
-import Modal from "@mui/material/Modal";
+import React, { useState } from "react";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
-// import ImageIcon from "@mui/icons-material/Image";
+// import TextField from "@mui/material/TextField";
 
-const useStyles = styled((theme) => ({
-  modalContainer: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    backgroundColor: theme.palette.background.paper,
-    borderRadius: theme.spacing(1),
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
-  addIcon: {
-    marginRight: theme.spacing(1),
-  },
-}));
+const ImageUploadModal = ({ isOpen, onClose, onImageUpload }) => {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedFileName, setSelectedFileName] = useState(""); // State to store selected file name
 
-const ImageUploadModal = ({ open, onClose, onUpload }) => {
-  const classes = useStyles();
-  const fileInputRef = useRef(null);
-
-  const handleButtonClick = () => {
-    fileInputRef.current.click(); // Programmatically trigger a click on the hidden input
+  const handleImageSelection = (event) => {
+    const file = event.target.files[0];
+    setSelectedImage(file);
+    setSelectedFileName(file.name); // Store the selected file name
+    console.log(file.name);
   };
 
-  const handleFileChange = (event) => {
-    // Handle file selection here, and pass the file to the onUpload function
-    const selectedFile = event.target.files[0];
-    onUpload(selectedFile);
-    onClose();
+  const handleUpload = () => {
+    if (selectedImage) {
+      // Pass the actual file object and the filename to onImageUpload
+      onImageUpload(selectedImage, selectedFileName);
+      setSelectedImage(null);
+      setSelectedFileName("");
+      onClose();
+    }
   };
 
   return (
-    <Modal open={open} onClose={onClose}>
-      <div className={classes.modalContainer}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleButtonClick} // Trigger the file picker dialog
-        >
-          <AddIcon className={classes.addIcon} />
-          Upload Image
-        </Button>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          style={{ display: "none" }}
-          ref={fileInputRef} // Reference to the hidden input element
-        />
-      </div>
-    </Modal>
+    <Dialog open={isOpen} onClose={onClose}>
+      <DialogTitle>Upload Image</DialogTitle>
+      <DialogContent>
+        <input type="file" accept="image/*" onChange={handleImageSelection} />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleUpload}>Upload</Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

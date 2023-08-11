@@ -25,7 +25,11 @@ const FriendsList = () => {
               <CardActionArea>
                 <ListItem alignItems="center">
                   <ListItemAvatar>
-                    <Avatar alt={friend.name} sx={{ bgcolor: "#f50057" }}>
+                    <Avatar
+                      alt={friend.name}
+                      src={friend.avatar}
+                      sx={{ bgcolor: "#f50057" }}
+                    >
                       {friend.name.charAt(0)}
                     </Avatar>
                   </ListItemAvatar>

@@ -28,7 +28,6 @@ const Profile = ({ token }) => {
   });
 
   const fetchUserData = useCallback(async (userId) => {
-    console.log(userId);
     try {
       let { data: users, error } = await supabase
         .from("profiles")

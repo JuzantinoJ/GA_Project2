@@ -1,7 +1,7 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
-import SignIn from "./components/signin/Signin";
+import SignInSide from "./components/signin/SignIn";
 import SignUp from "./components/signup/Signup";
 import Notification from "./components/main/notification/Notification";
 import Dashboard from "./components/main/dashboard/Dashboard";
@@ -36,7 +36,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route
           path="/"
-          element={<SignIn setToken={saveTokenToSessionStorage} />}
+          element={<SignInSide setToken={saveTokenToSessionStorage} />}
         />
         {token ? (
           <>

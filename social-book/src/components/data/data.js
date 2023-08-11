@@ -47,17 +47,27 @@ export const friendsData = [
   {
     id: 1,
     name: "John Doe",
-    avatar: "https://via.placeholder.com/150",
+    avatar: require("../images/avatar/johndoe.jpg"),
   },
   {
     id: 2,
     name: "Jane Smith",
-    avatar: "https://via.placeholder.com/150",
+    avatar: require("../images/avatar/janesmith.jpg"),
   },
   {
     id: 3,
     name: "Michael Johnson",
-    avatar: "https://via.placeholder.com/150",
+    avatar: require("../images/avatar/michealjohnson.jpg"),
+  },
+  {
+    id: 4,
+    name: "Michael Jackson",
+    avatar: require("../images/avatar/michealjackson.jpg"),
+  },
+  {
+    id: 5,
+    name: "Kelly Clarkson",
+    avatar: require("../images/avatar/kellyclarkson.jpg"),
   },
   // Add more friends here
 ];

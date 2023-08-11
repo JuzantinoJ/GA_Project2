@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { supabase } from "../../client";
 
 const useUserData = (userId) => {
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState({
+    avatar: "",
+    name: "",
+    bio: "",
+  });
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -10,7 +14,7 @@ const useUserData = (userId) => {
         let { data: users, error } = await supabase
           .from("profiles")
           .select("username, bio, avatar_url")
-          .eq("auth_uid", userId);
+          .eq("id", userId);
 
         if (error) {
           throw error;

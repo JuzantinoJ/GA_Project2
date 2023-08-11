@@ -1,40 +1,30 @@
-import React from "react";
 import { List, ListItem, ListItemText, Paper, IconButton } from "@mui/material";
-import { styled } from "@mui/material/styles"; // Import 'styled' from @mui/material/styles
-import { dummyUserPosts } from "../../data/data";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { styled } from "@mui/system";
 
-const useStyles = styled((theme) => ({
-  post: {
-    marginBottom: theme.spacing(2),
-    padding: theme.spacing(2),
-    borderRadius: theme.spacing(1),
-    backgroundColor: "#f0f2f5", // Custom background color for posts
-    display: "flex", // Make the post container a flex container
-    alignItems: "flex-start", // Align items (posts) to the top
-  },
-  postContent: {
-    flexGrow: 1, // Allow the post content to take up the remaining space
-    textAlign: "left", // Align the text to the left
-  },
+const PostContainer = styled(Paper)(({ theme }) => ({
+  marginBottom: theme.spacing(1),
+  padding: theme.spacing(1),
+  borderRadius: theme.spacing(1),
+  backgroundColor: "#f0f2f5", // Custom background color for posts
+  display: "flex", // Make the post container a flex container
+  alignItems: "flex-start", // Align items (posts) to the top
 }));
 
-const PostList = ({ posts }) => {
-  const classes = useStyles();
-
+const PostList = ({ posts, deletePost }) => {
   return (
     <List>
-      {dummyUserPosts.map((post, index) => (
-        <Paper className={classes.post} key={index}>
-          <ListItem sx={{ mt: 4 }}>
+      {posts.map((post) => (
+        <PostContainer key={post.id}>
+          <ListItem sx={{ mt: 2 }}>
             <ListItemText
-              primary={post.content}
-              secondary={post.user + " • " + post.timestamp}
-              className={classes.postContent}
+              primary={post.post_text}
+              secondary={new Date(post.posted_at).toLocaleString()}
+              sx={{ flexGrow: 1, textAlign: "left" }}
             />
-            {/* Delete Icon */}
+            {/* Comment Icon */}
             <IconButton>
               <CommentIcon />
             </IconButton>
@@ -43,11 +33,11 @@ const PostList = ({ posts }) => {
               <FavoriteIcon />
             </IconButton>
             {/* Delete Icon */}
-            <IconButton>
+            <IconButton onClick={() => deletePost(post.id)}>
               <DeleteIcon />
             </IconButton>
           </ListItem>
-        </Paper>
+        </PostContainer>
       ))}
     </List>
   );

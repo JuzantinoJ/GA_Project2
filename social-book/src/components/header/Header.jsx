@@ -14,7 +14,6 @@ import NotificationsMenuItem from "./NotificationsMenuItem";
 import SettingsMenuItem from "./SettingsMenuItem";
 // import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useNavigate } from "react-router-dom";
-import useUserData from "../customHook/useUserData";
 
 const drawerWidth = 240;
 
@@ -43,13 +42,10 @@ const Header = ({
   toggleDrawer,
   handleLogout,
   token,
-  onProfileUpdated,
 }) => {
   const [anchorElNotifications, setAnchorElNotifications] = useState(null);
   const [anchorElSettings, setAnchorElSettings] = useState(null);
   const navigate = useNavigate();
-
-  const userData = useUserData(token.user.id); // Use the custom hook to fetch user data
 
   const handleNotificationsClick = (event) => {
     setAnchorElNotifications(event.currentTarget);
@@ -105,7 +101,7 @@ const Header = ({
           noWrap
           sx={{ flexGrow: 1 }}
         >
-          Welcome Back {userData || token.user.user_metadata.username}
+          Welcome Back {token.user.user_metadata.username}
         </Typography>
         <IconButton color="inherit" onClick={handleNotificationsClick}>
           <Badge badgeContent={dummyNotifications.length} color="secondary">

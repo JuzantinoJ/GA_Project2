@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -7,9 +7,9 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../client";
+import backgroundImg from "../images/avatar/social_book_cover.png";
 
 const defaultTheme = createTheme();
 
@@ -19,15 +19,15 @@ export default function SignInSide({ setToken }) {
     password: "",
   });
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
-    e.preventDefault();
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
-  console.log(formData);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,15 +57,15 @@ export default function SignInSide({ setToken }) {
           sm={4}
           md={7}
           sx={{
-            backgroundImage:
-              "url(https://source.unsplash.com/random?wallpapers)",
+            backgroundImage: `url(${backgroundImg})`,
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
                 ? t.palette.grey[50]
                 : t.palette.grey[900],
-            backgroundSize: "cover",
-            backgroundPosition: "center",
+            backgroundSize: "50% 100%", // Image covers the container entirely
+            backgroundAttachment: "fixed",
+            backgroundPosition: "start",
           }}
         />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -96,6 +96,7 @@ export default function SignInSide({ setToken }) {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                value={formData.email}
                 onChange={handleChange}
               />
               <TextField
@@ -107,6 +108,7 @@ export default function SignInSide({ setToken }) {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={formData.password}
                 onChange={handleChange}
               />
               <Button

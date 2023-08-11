@@ -3,8 +3,15 @@ import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import { supabase } from "../../../client";
+import { useNavigate } from "react-router-dom";
 
-const AccountPage = () => {
+const AccountPage = ({ token }) => {
   const [userData, setUserData] = useState({
     dateOfBirth: "",
     company: "",
@@ -13,6 +20,9 @@ const AccountPage = () => {
     contactNumber: "",
     address: "",
   });
+  const [isDateInputFocused, setIsDateInputFocused] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -22,10 +32,59 @@ const AccountPage = () => {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleDateInputFocus = () => {
+    setIsDateInputFocused(true);
+  };
+
+  const handleDateInputBlur = () => {
+    setIsDateInputFocused(false);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    navigate("/container/profile");
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Perform any actions to save/update user data
-    console.log("User data:", userData);
+
+    const updateData = {
+      id: token.user.id,
+    };
+
+    if (userData.dateOfBirth) {
+      updateData.date_of_birth = userData.dateOfBirth;
+    }
+    if (userData.company) {
+      updateData.company = userData.company;
+    }
+    if (userData.jobTitle) {
+      updateData.job_title = userData.jobTitle;
+    }
+    if (userData.contactNumber) {
+      updateData.contact_number = userData.contactNumber;
+    }
+    if (userData.email) {
+      updateData.email = userData.email;
+    }
+    if (userData.address) {
+      updateData.address = userData.address;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .upsert([updateData]);
+
+      if (error) {
+        throw error;
+      }
+
+      setIsDialogOpen(true);
+      console.log("Updated user profile data:", data);
+    } catch (error) {
+      console.error("Error updating user profile:", error.message);
+    }
   };
 
   return (
@@ -36,9 +95,12 @@ const AccountPage = () => {
       <form onSubmit={handleSubmit}>
         <TextField
           label="Date of Birth"
-          name="dateOfBirth"
+          type={isDateInputFocused ? "date" : "text"}
           value={userData.dateOfBirth}
           onChange={handleChange}
+          onFocus={handleDateInputFocus}
+          onBlur={handleDateInputBlur}
+          name="dateOfBirth"
           fullWidth
           margin="normal"
         />
@@ -91,6 +153,24 @@ const AccountPage = () => {
           Save Changes
         </Button>
       </form>
+      <Dialog
+        open={isDialogOpen}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Profile Updated"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Your profile has been successfully updated.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary" autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

@@ -56,20 +56,28 @@ export default function SignUp() {
       const { user, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
+        options: {
+          data: {
+            username: formData.name,
+          },
+        },
       });
 
       if (error) {
         throw error;
       }
 
-      // Insert the new user data into the 'users' table
-      await supabase.from("users").insert({
-        auth_uid: user.id, // Use the Supabase authentication UID as the foreign key
-        username: formData.name,
-      });
+      // Insert the new user data into the 'profiles' table
+      await supabase.from("profiles").insert([
+        {
+          auth_uid: user.id, // Use the Supabase authentication UID as the primary key
+          username: formData.name,
+        },
+      ]);
 
       alert("Please check your email to verify your account!");
       navigate("/");
+
       // Navigate to the login page or wherever you want after successful sign-up
     } catch (error) {
       alert(error.message);

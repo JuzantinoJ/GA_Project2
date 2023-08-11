@@ -34,9 +34,9 @@ const EditProfile = ({ token }) => {
   const fetchUserData = useCallback(async (userId) => {
     try {
       let { data: users, error } = await supabase
-        .from("users")
+        .from("profiles")
         .select("username, bio, avatar_url")
-        .eq("auth_uid", userId);
+        .eq("id", userId);
       if (error) {
         throw error;
       }
@@ -79,17 +79,19 @@ const EditProfile = ({ token }) => {
     setImageUploaded(true);
   };
 
-  const handleSaveChanges = async () => {
+  const handleSaveChanges = async (e) => {
+    e.preventDefault();
+
     const dataToUpdate = {
+      id: token.user.id,
       username: formData.name,
       bio: formData.bio,
     };
 
     try {
       const { data, error } = await supabase
-        .from("users")
-        .update(dataToUpdate)
-        .eq("auth_uid", token.user.id);
+        .from("profiles")
+        .upsert(dataToUpdate);
 
       if (error) {
         throw error;
@@ -98,26 +100,23 @@ const EditProfile = ({ token }) => {
       console.log("Updated user data:", data);
 
       if (imageUploaded) {
-        const storagePath = `avatar/${token.user.id}`;
+        const storagePath = `${token.user.id}`;
 
         try {
-          // List existing files in the storagePath
           const { data: existingFiles, error: existingFilesError } =
-            await supabase.storage.from("images").list(storagePath);
+            await supabase.storage.from("avatars").list(storagePath);
 
           if (existingFilesError) {
             throw existingFilesError;
           }
-
+          // Delete previous image avatars
           if (existingFiles && existingFiles.length > 0) {
-            // Delete the previous image if it exists
             const prevImageFilename = existingFiles[0].name;
             console.log("Previous image filename:", prevImageFilename);
 
-            // Delete the previous image
             const { data: deleteData, error: deleteError } =
               await supabase.storage
-                .from("images")
+                .from("avatars")
                 .remove([`${storagePath}/${prevImageFilename}`]);
 
             if (deleteError) {
@@ -127,10 +126,10 @@ const EditProfile = ({ token }) => {
             console.log("Previous image deleted:", deleteData);
           }
 
-          // Upload the new image
+          // Upload new image avatar
           const { data: uploadData, error: uploadError } =
             await supabase.storage
-              .from("images")
+              .from("avatars")
               .upload(`${storagePath}/${uploadedFileName}`, uploadAvatar);
 
           if (uploadError) {
@@ -139,22 +138,9 @@ const EditProfile = ({ token }) => {
 
           console.log("Image uploaded to storage:", uploadData);
 
-          // https://bkrvcsfzycqmoqwgaxeh.supabase.co/storage/v1/object/public/images/avatar/ea2be061-5702-4bf0-8837-d07adb29e692/avatar.png
-          // Construct the public URL of the uploaded image
-          const imageUrl = `https://bkrvcsfzycqmoqwgaxeh.supabase.co/storage/v1/object/public/images/${storagePath}/${uploadedFileName}`;
+          const imageUrl = `https://bkrvcsfzycqmoqwgaxeh.supabase.co/storage/v1/object/public/avatars/${storagePath}/${uploadedFileName}`;
 
-          // Update the user's record with the image URL
-          const { data: updateUserData, error: updateUserError } =
-            await supabase
-              .from("users")
-              .update({ avatar_url: imageUrl })
-              .eq("auth_uid", token.user.id);
-
-          if (updateUserError) {
-            throw updateUserError;
-          }
-
-          console.log("User data updated with image URL:", updateUserData);
+          dataToUpdate.avatar_url = imageUrl;
         } catch (existingFilesError) {
           console.error(
             "Error fetching existing files:",
@@ -162,6 +148,16 @@ const EditProfile = ({ token }) => {
           );
         }
       }
+
+      const { data: updateUserData, error: updateUserError } = await supabase
+        .from("profiles")
+        .upsert(dataToUpdate);
+
+      if (updateUserError) {
+        throw updateUserError;
+      }
+
+      console.log("User data updated with image URL:", updateUserData);
 
       setIsSuccessModalOpen(true);
     } catch (error) {

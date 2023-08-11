@@ -105,7 +105,7 @@ const Header = ({
           noWrap
           sx={{ flexGrow: 1 }}
         >
-          Welcome Back {userData ? userData.name : ""}
+          Welcome Back {userData || token.user.user_metadata.username}
         </Typography>
         <IconButton color="inherit" onClick={handleNotificationsClick}>
           <Badge badgeContent={dummyNotifications.length} color="secondary">

@@ -64,9 +64,12 @@ function App() {
                   />
                 }
               />
-              <Route path="photo-album" element={<Photo />} />
+              <Route path="photo-album" element={<Photo token={token} />} />
               <Route path="friends-list" element={<FriendsList />} />
-              <Route path="account-page" element={<AccountPage />} />
+              <Route
+                path="account-page"
+                element={<AccountPage token={token} />}
+              />
             </Route>
           </>
         ) : (

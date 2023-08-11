@@ -8,7 +8,7 @@ const useUserData = (userId) => {
     const fetchUserData = async () => {
       try {
         let { data: users, error } = await supabase
-          .from("users")
+          .from("profiles")
           .select("username, bio, avatar_url")
           .eq("auth_uid", userId);
 

@@ -41,7 +41,7 @@ export default function SignInSide({ setToken }) {
       alert("Welcome Back!");
       setToken(data);
       console.log(data);
-      navigate("/container");
+      navigate("/container/dashboard");
     } catch (error) {
       alert("Incorrect Username & Password");
     }

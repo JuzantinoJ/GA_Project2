@@ -18,9 +18,9 @@ const Dashboard = ({ token }) => {
   const fetchUserData = useCallback(async (userId) => {
     try {
       let { data: users, error } = await supabase
-        .from("users")
+        .from("profiles")
         .select("username, bio, avatar_url")
-        .eq("auth_uid", userId);
+        .eq("id", userId);
       if (error) {
         throw error;
       }
@@ -62,7 +62,7 @@ const Dashboard = ({ token }) => {
                 sx={{ width: 200, height: 200 }}
               />
             </Grid>
-            <Grid item sx={{ marginLeft: "40px", whiteSpace: "nowrap" }}>
+            <Grid item sx={{ marginLeft: "10px", whiteSpace: "nowrap" }}>
               <Typography variant="h4">{userData.name}</Typography>
               <Typography variant="body3">{userData.bio}</Typography>
             </Grid>

@@ -15,34 +15,59 @@ import { dummyProfile } from "../../data/data";
 const Profile = ({ token }) => {
   const theme = useTheme();
   const isWidth840pxOrLess = useMediaQuery(theme.breakpoints.down("md"));
-  const [userName, setUserName] = useState(null);
-  const [userBio, setUserBio] = useState(null);
-  const [userAvatar, setUserAvatar] = useState(null);
+  const [userData, setUserData] = useState({
+    userName: "",
+    userBio: null,
+    userAvatar: null,
+    dateOfBirth: null,
+    company: null,
+    jobTitle: null,
+    email: null,
+    contactNumber: null,
+    address: null,
+  });
 
   const fetchUserData = useCallback(async (userId) => {
+    console.log(userId);
     try {
       let { data: users, error } = await supabase
-        .from("users")
-        .select("username, bio, avatar_url")
-        .eq("auth_uid", userId);
+        .from("profiles")
+        .select(
+          "username, bio, avatar_url, date_of_birth,company, job_title, contact_number, address, email"
+        )
+        .eq("id", userId);
       if (error) {
         throw error;
       }
       if (users.length > 0) {
-        setUserName(users[0].username);
-        setUserBio(users[0].bio);
-        setUserAvatar(String(users[0].avatar_url));
+        setUserData({
+          userName: users[0].username,
+          userBio: users[0].bio,
+          userAvatar: String(users[0].avatar_url),
+          dateOfBirth: users[0].date_of_birth,
+          company: users[0].company,
+          jobTitle: users[0].job_title,
+          email: users[0].email,
+          contactNumber: users[0].contact_number,
+          address: users[0].address,
+        });
       } else {
-        setUserName(null);
-        setUserBio(null);
-        setUserAvatar(null);
+        setUserData({
+          userName: null,
+          userBio: null,
+          userAvatar: null,
+          dateOfBirth: null,
+          company: null,
+          jobTitle: null,
+          email: null,
+          contactNumber: null,
+          address: null,
+        });
       }
     } catch (error) {
       console.error("Error fetching user data:", error.message);
     }
   }, []);
-
-  console.log(userAvatar);
 
   useEffect(() => {
     if (token) {
@@ -69,18 +94,18 @@ const Profile = ({ token }) => {
                 width: 100,
                 height: 100,
               }}
-              alt={userName || dummyProfile.name}
-              src={userAvatar || dummyProfile.avatar} // Use userAvatar if available, otherwise use dummyProfile.avatar
+              alt={userData.userName || dummyProfile.name}
+              src={userData.userAvatar || dummyProfile.avatar} // Use userAvatar if available, otherwise use dummyProfile.avatar
             />
             <Typography sx={{ marginTop: 5 }} variant="h3">
-              {userName}
+              {userData.userName}
             </Typography>
             <Typography
               sx={{ fontSize: "24px", marginTop: 5, marginBottom: 5 }}
               variant="body1"
             >
-              {userBio ? (
-                userBio
+              {userData.userBio ? (
+                userData.userBio
               ) : (
                 <span style={{ fontStyle: "italic" }}>Create a bio</span>
               )}
@@ -100,6 +125,44 @@ const Profile = ({ token }) => {
               <EditIcon sx={{ marginRight: 1 }} />
               Edit Profile
             </Button>
+          </Paper>
+        </Grid>
+        {/* User Details */}
+        <Grid item xs={12}>
+          <Paper sx={{ p: 2 }}>
+            <Typography variant="h5" gutterBottom>
+              User Details
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={6}>
+                <Typography variant="subtitle1">Name:</Typography>
+                <Typography>{userData.userName || "N/A"}</Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography variant="subtitle1">Date of Birth:</Typography>
+                <Typography>{userData.dateOfBirth || "N/A"}</Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography variant="subtitle1">Company:</Typography>
+                <Typography>{userData.company || "N/A"}</Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography variant="subtitle1">Job Title:</Typography>
+                <Typography>{userData.jobTitle || "N/A"}</Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography variant="subtitle1">Email:</Typography>
+                <Typography>{userData.email || "N/A"}</Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography variant="subtitle1">Contact Number:</Typography>
+                <Typography>{userData.contactNumber || "N/A"}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1">Address:</Typography>
+                <Typography>{userData.address || "N/A"}</Typography>
+              </Grid>
+            </Grid>
           </Paper>
         </Grid>
       </Grid>
